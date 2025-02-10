@@ -1,25 +1,20 @@
-# Network/firewall variables
-
 variable "public_network_access_enabled" {
   description = "Whether the Azure Databricks is available from public network."
   type        = bool
   default     = false
 }
 
-variable "network_bypass" {
-  description = "Specify whether traffic is bypassed for 'Logging', 'Metrics', 'AzureServices' or 'None'."
-  type        = list(string)
-  default     = ["Logging", "Metrics", "AzureServices"]
+variable "virtual_network_id" {
+  description = "ID of the Virtual Network in which create the subnet and Private Endpoint."
+  type        = string
 }
 
-variable "allowed_cidrs" {
-  description = "List of allowed CIDR ranges to access the Azure Databricks resource."
-  type        = list(string)
-  default     = []
+variable "subnet_frontend_prefix" {
+  description = "Prefix of the frontend subnet to create (/25 recommanded)."
+  type        = string
 }
 
-variable "allowed_subnet_ids" {
-  description = "List of allowed subnets IDs to access the Azure Databricks resource."
-  type        = list(string)
-  default     = []
+variable "subnet_backend_prefix" {
+  description = "Prefix of the backend subnet to create (/25 recommanded)."
+  type        = string
 }

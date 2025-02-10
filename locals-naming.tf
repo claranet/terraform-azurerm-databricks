@@ -3,5 +3,6 @@ locals {
   name_prefix = lower(var.name_prefix)
   name_suffix = lower(var.name_suffix)
 
-  databricks_name = coalesce(var.custom_name, data.azurecaf_name.databricks.result)
+  name                        = coalesce(var.custom_name, data.azurecaf_name.databricks.result)
+  managed_resource_group_name = lower(coalesce(var.managed_resource_group_name, data.azurecaf_name.databricks_rg.result))
 }

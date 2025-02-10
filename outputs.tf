@@ -13,11 +13,6 @@ output "name" {
   value       = azurerm_databricks_workspace.main.name
 }
 
-output "identity_principal_id" {
-  description = "Azure Databricks system identity principal ID."
-  value       = try(azurerm_databricks_workspace.main.identity[0].principal_id, null)
-}
-
 output "module_diagnostics" {
   description = "Diagnostics settings module outputs."
   value       = module.diagnostics
