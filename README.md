@@ -34,6 +34,22 @@ More details about variables set by the `terraform-wrapper` available in the [do
 [Hashicorp Terraform](https://github.com/hashicorp/terraform/). Instead, we recommend to use [OpenTofu](https://github.com/opentofu/opentofu/).
 
 ```hcl
+module "vnet" {
+  source  = "claranet/vnet/azurerm"
+  version = "x.x.x"
+
+  environment    = var.environment
+  location       = module.azure_region.location
+  location_short = module.azure_region.location_short
+  client_name    = var.client_name
+  stack          = var.stack
+
+  resource_group_name = module.rg.name
+
+  cidrs       = ["10.10.0.0/16"]
+  dns_servers = ["10.0.0.4", "10.0.0.5"] # Can be empty if not used
+}
+
 module "databricks" {
   source  = "claranet/databricks/azurerm"
   version = "x.x.x"
@@ -45,6 +61,10 @@ module "databricks" {
   client_name = var.client_name
   environment = var.environment
   stack       = var.stack
+
+  virtual_network_id     = module.vnet.id
+  subnet_backend_prefix  = "10.10.1.0/25"
+  subnet_frontend_prefix = "10.10.2.0/25"
 
   logs_destinations_ids = [
     module.run.logs_storage_account_id,
@@ -61,14 +81,18 @@ module "databricks" {
 
 | Name | Version |
 |------|---------|
-| azurecaf | ~> 1.2.28 |
+| azurecaf | ~> 1.2.29 |
 | azurerm | ~> 4.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| diagnostics | claranet/diagnostic-settings/azurerm | n/a |
+| diagnostics | claranet/diagnostic-settings/azurerm | ~> 8.0.0 |
+| nsg\_backend | claranet/nsg/azurerm | ~> 8.0.0 |
+| nsg\_frontend | claranet/nsg/azurerm | ~> 8.0.0 |
+| subnet\_backend | claranet/subnet/azurerm | ~> 8.0.1 |
+| subnet\_frontend | claranet/subnet/azurerm | ~> 8.0.1 |
 
 ## Resources
 
@@ -76,41 +100,54 @@ module "databricks" {
 |------|------|
 | [azurerm_databricks_workspace.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/databricks_workspace) | resource |
 | [azurecaf_name.databricks](https://registry.terraform.io/providers/claranet/azurecaf/latest/docs/data-sources/name) | data source |
+| [azurecaf_name.databricks_rg](https://registry.terraform.io/providers/claranet/azurecaf/latest/docs/data-sources/name) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| allowed\_cidrs | List of allowed CIDR ranges to access the Azure Databricks resource. | `list(string)` | `[]` | no |
-| allowed\_subnet\_ids | List of allowed subnets IDs to access the Azure Databricks resource. | `list(string)` | `[]` | no |
 | client\_name | Client name/account used in naming. | `string` | n/a | yes |
 | custom\_name | Custom Azure Databricks, generated if not set. | `string` | `""` | no |
+| custom\_parameters | Map of custom parameters. | <pre>object({<br/>    machine_learning_workspace_id = optional(string)<br/>    nat_gateway_name              = optional(string)<br/>    public_ip_name                = optional(string)<br/>    storage_account_name          = optional(string)<br/>    storage_account_sku_name      = optional(string)<br/>    no_public_ip                  = optional(bool, true)<br/>  })</pre> | `{}` | no |
 | default\_tags\_enabled | Option to enable or disable default tags. | `bool` | `true` | no |
 | diagnostic\_settings\_custom\_name | Custom name of the diagnostics settings, name will be `default` if not set. | `string` | `"default"` | no |
 | environment | Project environment. | `string` | n/a | yes |
 | extra\_tags | Additional tags to add on resources. | `map(string)` | `{}` | no |
-| identity | Identity block information. | <pre>object({<br/>    type         = optional(string, "SystemAssigned")<br/>    identity_ids = optional(list(string))<br/>  })</pre> | `{}` | no |
+| infrastructure\_encryption\_enabled | Enable infrastructure encryption for the Azure Databricks Workspace. | `bool` | `true` | no |
+| load\_balancer\_backend\_address\_pool\_id | Resource ID of the Outbound Load balancer Backend Address Pool for Secure Cluster Connectivity (No Public IP) workspace. | `string` | `null` | no |
 | location | Azure region to use. | `string` | n/a | yes |
 | location\_short | Short string for Azure location. | `string` | n/a | yes |
 | logs\_categories | Log categories to send to destinations. | `list(string)` | `null` | no |
 | logs\_destinations\_ids | List of destination resources IDs for logs diagnostic destination.<br/>Can be `Storage Account`, `Log Analytics Workspace` and `Event Hub`. No more than one of each can be set.<br/>If you want to use Azure EventHub as a destination, you must provide a formatted string containing both the EventHub Namespace authorization send ID and the EventHub name (name of the queue to use in the Namespace) separated by the <code>&#124;</code> character. | `list(string)` | n/a | yes |
 | logs\_metrics\_categories | Metrics categories to send to destinations. | `list(string)` | `null` | no |
+| managed\_resource\_group\_name | The name of the resource group where Azure should place the managed Databricks resources. | `string` | `null` | no |
+| managed\_services\_cmk\_key\_vault\_key\_id | Customer managed encryption properties for the Databricks Workspace managed resources (e.g. Notebooks and Artifacts). | `string` | `null` | no |
 | name\_prefix | Optional prefix for the generated name. | `string` | `""` | no |
 | name\_suffix | Optional suffix for the generated name. | `string` | `""` | no |
-| network\_bypass | Specify whether traffic is bypassed for 'Logging', 'Metrics', 'AzureServices' or 'None'. | `list(string)` | <pre>[<br/>  "Logging",<br/>  "Metrics",<br/>  "AzureServices"<br/>]</pre> | no |
 | public\_network\_access\_enabled | Whether the Azure Databricks is available from public network. | `bool` | `false` | no |
 | resource\_group\_name | Name of the resource group. | `string` | n/a | yes |
+| sku | The SKU of the Azure Databricks Workspace. Possible values are `standard`, `premium`, or `trial`. | `string` | `"premium"` | no |
 | stack | Project stack name. | `string` | n/a | yes |
+| subnet\_backend\_prefix | Prefix of the backend subnet to create (/25 recommanded). | `string` | n/a | yes |
+| subnet\_frontend\_prefix | Prefix of the frontend subnet to create (/25 recommanded). | `string` | n/a | yes |
+| virtual\_network\_id | ID of the Virtual Network in which create the subnet and Private Endpoint. | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
 | id | Azure Databricks ID. |
-| identity\_principal\_id | Azure Databricks system identity principal ID. |
+| managed\_resource\_group\_id | Managed Databricks resource group ID. |
 | module\_diagnostics | Diagnostics settings module outputs. |
+| module\_nsg\_backend | NSG backend used by Databricks workspace module outputs. |
+| module\_nsg\_frontend | NSG frontend used by Databricks workspace module outputs. |
+| module\_subnet\_backend | Subnet backend used by Databricks workspace module outputs. |
+| module\_subnet\_frontend | Subnet frontend used by Databricks workspace module outputs. |
 | name | Azure Databricks name. |
 | resource | Azure Databricks resource object. |
+| storage\_account\_identity | Identity block for Storage Account needed to provide access to the workspace for enabling Customer Managed Keys. |
+| workspace\_id | ID of the Databricks workspace in Databricks control plane. |
+| workspace\_url | Azure Databricks workspace URL. |
 <!-- END_TF_DOCS -->
 
 ## Related documentation

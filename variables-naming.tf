@@ -17,3 +17,9 @@ variable "custom_name" {
   type        = string
   default     = ""
 }
+
+variable "managed_resource_group_name" {
+  description = "The name of the resource group where Azure should place the managed Databricks resources."
+  type        = string
+  default     = null
+}
