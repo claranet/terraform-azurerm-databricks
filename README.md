@@ -82,7 +82,7 @@ module "databricks" {
 | Name | Version |
 |------|---------|
 | azurecaf | ~> 1.2.29 |
-| azurerm | ~> 4.0 |
+| azurerm | ~> 4.11 |
 
 ## Modules
 
