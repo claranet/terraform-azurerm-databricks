@@ -88,7 +88,7 @@ module "databricks" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| diagnostics | claranet/diagnostic-settings/azurerm | ~> 8.1.0 |
+| diagnostics | claranet/diagnostic-settings/azurerm | ~> 8.2.0 |
 | nsg\_backend | claranet/nsg/azurerm | ~> 8.1.0 |
 | nsg\_frontend | claranet/nsg/azurerm | ~> 8.1.0 |
 | subnet\_backend | claranet/subnet/azurerm | ~> 8.1.0 |
