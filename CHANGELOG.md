@@ -1,3 +1,34 @@
+## 8.0.3 (2026-02-25)
+
+### Code Refactoring
+
+* **gitlab MR template:** ♻️ update default reviewers group with Azure Factory 🔧 0f7d575
+
+### Miscellaneous Chores
+
+* **deps:** 🔗 bump tflint rules and example c9a95c9
+* **deps:** update dependency opentofu to v1.10.7 947d568
+* **deps:** update dependency opentofu to v1.11.2 86cb76e
+* **deps:** update dependency opentofu to v1.11.3 c841921
+* **deps:** update dependency opentofu to v1.11.4 1140e8e
+* **deps:** update dependency pre-commit to v4.4.0 42b2019
+* **deps:** update dependency pre-commit to v4.5.0 667bb8c
+* **deps:** update dependency pre-commit to v4.5.1 5aced3a
+* **deps:** update dependency tflint to v0.60.0 9cacb1b
+* **deps:** update dependency tflint to v0.61.0 7cf00b6
+* **deps:** update dependency trivy to v0.67.1 2f34ccb
+* **deps:** update dependency trivy to v0.67.2 c0be405
+* **deps:** update dependency trivy to v0.68.1 252463f
+* **deps:** update dependency trivy to v0.68.2 5b1e714
+* **deps:** update dependency trivy to v0.69.0 823ad40
+* **deps:** update dependency trivy to v0.69.1 8308e7f
+* **deps:** update pre-commit hook crate-ci/committed to v1.1.10 b10b3ee
+* **deps:** update pre-commit hook crate-ci/committed to v1.1.11 477f37f
+* **deps:** update pre-commit hook crate-ci/committed to v1.1.8 ad2bab0
+* **deps:** update pre-commit hook crate-ci/committed to v1.1.9 3673be3
+* **deps:** update pre-commit hook tofuutils/pre-commit-opentofu to v2.2.2 9fbdaa9
+* **deps:** update tools 861c562
+
 ## 8.0.2 (2025-09-30)
 
 ### Code Refactoring
