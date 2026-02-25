@@ -29,4 +29,8 @@ resource "azurerm_databricks_workspace" "main" {
   }
 
   tags = merge(local.default_tags, var.extra_tags)
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
