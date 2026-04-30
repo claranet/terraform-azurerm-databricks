@@ -80,14 +80,14 @@ module "databricks" {
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | azurecaf | >= 1.2.28 |
 | azurerm | ~> 4.31 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
+| ---- | ------ | ------- |
 | diagnostics | claranet/diagnostic-settings/azurerm | ~> 8.2.0 |
 | nsg\_backend | claranet/nsg/azurerm | ~> 8.1.0 |
 | nsg\_frontend | claranet/nsg/azurerm | ~> 8.1.0 |
@@ -97,7 +97,7 @@ module "databricks" {
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [azurerm_databricks_workspace.main](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/databricks_workspace) | resource |
 | [azurecaf_name.databricks](https://registry.terraform.io/providers/claranet/azurecaf/latest/docs/data-sources/name) | data source |
 | [azurecaf_name.databricks_rg](https://registry.terraform.io/providers/claranet/azurecaf/latest/docs/data-sources/name) | data source |
@@ -105,7 +105,7 @@ module "databricks" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | client\_name | Client name/account used in naming. | `string` | n/a | yes |
 | custom\_name | Custom Azure Databricks, generated if not set. | `string` | `""` | no |
 | custom\_parameters | Map of custom parameters. | <pre>object({<br/>    machine_learning_workspace_id = optional(string)<br/>    nat_gateway_name              = optional(string)<br/>    public_ip_name                = optional(string)<br/>    storage_account_name          = optional(string)<br/>    storage_account_sku_name      = optional(string)<br/>    no_public_ip                  = optional(bool, true)<br/>  })</pre> | `{}` | no |
@@ -135,7 +135,7 @@ module "databricks" {
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | id | Azure Databricks ID. |
 | managed\_resource\_group\_id | Managed Databricks resource group ID. |
 | module\_diagnostics | Diagnostics settings module outputs. |
