@@ -1,6 +1,7 @@
 output "resource" {
   description = "Azure Databricks resource object."
   value       = azurerm_databricks_workspace.main
+  sensitive   = true
 }
 
 output "id" {
