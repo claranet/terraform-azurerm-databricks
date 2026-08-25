@@ -1,6 +1,6 @@
 module "nsg_backend" {
   source  = "claranet/nsg/azurerm"
-  version = "~> 8.1.0"
+  version = "~> 9.0"
 
   client_name    = var.client_name
   environment    = var.environment
@@ -19,7 +19,7 @@ module "nsg_backend" {
 
 module "subnet_backend" {
   source  = "claranet/subnet/azurerm"
-  version = "~> 8.1.0"
+  version = "~> 9.0"
 
   environment    = var.environment
   location_short = var.location_short
@@ -50,7 +50,7 @@ module "subnet_backend" {
 
 module "nsg_frontend" {
   source  = "claranet/nsg/azurerm"
-  version = "~> 8.1.0"
+  version = "~> 9.0"
 
   client_name    = var.client_name
   environment    = var.environment
@@ -69,7 +69,7 @@ module "nsg_frontend" {
 
 module "subnet_frontend" {
   source  = "claranet/subnet/azurerm"
-  version = "~> 8.1.0"
+  version = "~> 9.0"
 
   environment    = var.environment
   location_short = var.location_short
